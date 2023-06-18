@@ -46,18 +46,25 @@ function generateRepotr(){
         <tr>
             <th>Name</th>
             <th>Roll</th>
-            <th>Action</th>
+            <?php if(hasPrivilege()): ?>
+                <th>Action</th>
+            <?php endif; ?>
         </tr>
 
         <?php foreach($students as $student) { ?>
             <tr>
                 <td><?php echo $student['fname']." ".$student['lname']; ?></td>
                 <td><?php echo $student['roll']; ?></td>
-                <td>
-                    
-                    <?php printf('<a href="/crud/index.php?task=edit&id=%s" class="btn btn-sm">Edit</a>', $student['id']); ?>
-                    <?php printf('<a class="delete" href="/crud/index.php?task=delete&id=%s" class="btn btn-sm">Delete</a>', $student['id']); ?> 
-                <td>
+                <?php if(hasPrivilege()): ?>
+                    <td>
+                        <?php if(isAdmin()): ?>
+                            <?php printf('<a href="/crud/index.php?task=edit&id=%s" class="btn btn-sm">Edit</a>', $student['id']); ?>
+                            <?php printf('<a class="delete" href="/crud/index.php?task=delete&id=%s" class="btn btn-sm">Delete</a>', $student['id']); ?> 
+                        <?php elseif(isEditor()): ?>
+                            <?php printf('<a href="/crud/index.php?task=edit&id=%s" class="btn btn-sm">Edit</a>', $student['id']); ?>
+                        <?php endif; ?>
+                    <td>
+                <?php endif; ?>
             </tr>
         <?php } ?>
 
@@ -187,4 +194,34 @@ function getNewId($students){
     $maxId = max(array_column($students,'id')); 
     return $maxId + 1;
 }
+
+
+function isAdmin(){
+    if(isset($_SESSION['role']) && 'admin' == $_SESSION['role']){
+        return true;
+    }
+}
+
+
+function isEditor(){
+    return (isset($_SESSION['role']) && 'editor' == $_SESSION['role']);
+}
+
+
+function hasPrivilege(){
+    return (isAdmin() || isEditor());
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 ?>

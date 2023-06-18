@@ -5,7 +5,17 @@
   // $task = isset($_GET['task']) ? $_GET['task'] : 'report';
   $task = $_GET['task'] ?? 'report';
 
+if('edit' == $task){
+    if(!hasPrivilege()){
+        header('location: /crud/index.php?task=report');
+    }
+}
   if ('delete' == $task){
+    if(!isAdmin()){
+        header('location: /crud/index.php?task=report');
+        return;
+    }
+
         $id = filter_input(INPUT_GET,'id', FILTER_SANITIZE_STRING);
         if($id > 0){
             deleteStudent($id);
@@ -15,13 +25,18 @@
   }
 
   $error = $_GET['error'] ?? '0';
-  if ("seed" == $task){
+
+if ("seed" == $task){
+    if(!isAdmin()){
+        header('location: /crud/index.php?task=report');
+        return;
+    }
     seed(DB_NAME);
     $info = "Seeding Complete.";
-  }elseif("report" == $task){
+}elseif("report" == $task){
     
     // $info = "Report Complete.";
-  };
+};
 
   $fname = '';
   $lname = '';

@@ -30,15 +30,21 @@ session_start([
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/crud/index.php?task=report">All Students</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/crud/index.php?task=add">Add New Students</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/crud/index.php?task=seed">Seed</a>
-                </li>
+
+                <?php if(hasPrivilege()): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/crud/index.php?task=add">Add New Students</a>
+                    </li>
+                <?php endif; ?>
+
+                <?php if(isAdmin()): ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/crud/index.php?task=seed">Seed</a>
+                    </li>
+                <?php endif; ?>
             </ul>
 
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav me-0 mb-2 mb-lg-0">
                 <?php if(!isset($_SESSION['logedin']) || $_SESSION['logedin'] == false): ?>
                     <li class="nav-item">
                         <a class="nav-link" href="/crud/auth.php">Login</a>
